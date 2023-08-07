@@ -20,7 +20,7 @@ function App() {
   const [shouldBlockField, setShouldBlockField] = useState(false)
 
   const onCardClick = (item: FieldItem) => {
-    if (shouldBlockField) return
+    if (shouldBlockField || item.value) return
 
     const [newField, openedValue] = openFieldCard(field, item.id, secretField)
 
@@ -55,13 +55,13 @@ function App() {
   }
 
   return (
-    <>
+    <div className="flex h-screen w-screen items-center justify-center">
       <FieldGrid
         field={field}
         onCardClick={onCardClick}
         isBlocked={shouldBlockField}
       />
-    </>
+    </div>
   )
 }
 
