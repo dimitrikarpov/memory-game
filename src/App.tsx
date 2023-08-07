@@ -143,8 +143,11 @@ const newField: Field = [
 function App() {
   const [field, setField] = useState<Field>(newField)
   const [prevClickedCard, setPrevClickedCard] = useState<FieldItem>()
+  const [shouldBlockField, setShouldBlockField] = useState(false)
 
   const onCardClick = (item: FieldItem) => {
+    if (shouldBlockField) return
+
     const [newField, openedValue] = openFieldCard(field, item.id, secretField)
 
     setField(newField)
@@ -162,6 +165,8 @@ function App() {
     }
 
     if (prevClickedCard.value !== openedValue) {
+      setShouldBlockField(true)
+
       setTimeout(() => {
         setPrevClickedCard(undefined)
 
@@ -169,6 +174,7 @@ function App() {
           const newField = closeFieldCards(field, [prevClickedCard.id, item.id])
 
           setField(newField)
+          setShouldBlockField(false)
         })
       }, 500)
     }
@@ -176,7 +182,11 @@ function App() {
 
   return (
     <>
-      <FieldGrid field={field} onCardClick={onCardClick} />
+      <FieldGrid
+        field={field}
+        onCardClick={onCardClick}
+        isBlocked={shouldBlockField}
+      />
     </>
   )
 }

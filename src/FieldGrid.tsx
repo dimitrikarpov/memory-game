@@ -3,15 +3,22 @@ import { Field, FieldItem } from "./App"
 
 type Props = {
   field: Field
+  isBlocked: boolean
   onCardClick: (item: FieldItem) => void
 }
 
 export const FieldGrid: React.FunctionComponent<Props> = ({
   field,
+  isBlocked,
   onCardClick,
 }) => {
   return (
-    <div className="grid w-fit grid-cols-4 grid-rows-4 gap-3">
+    <div
+      className={clsx(
+        "grid w-fit grid-cols-4 grid-rows-4 gap-3",
+        isBlocked && "pointer-events-none",
+      )}
+    >
       {field.map((item) => (
         <div
           onClick={() => {
