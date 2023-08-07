@@ -73,3 +73,29 @@ export const closeFieldCards = (field: Field, ids: number[]): Field => {
 
   return newField
 }
+
+function randomInteger(min: number, max: number) {
+  return Math.floor(Math.random() * (max - min + 1)) + min
+}
+
+export const randomizeField = (x: number, y: number): Field => {
+  const total = x * y
+  const maxValue = total / 2
+
+  let values: number[] = []
+  for (let i = 1; i <= maxValue; i++) {
+    values.push(i)
+    values.push(i)
+  }
+
+  let field = Array.from({ length: total }).map((_, index) => {
+    const randomValue = values.splice(randomInteger(0, values.length - 1), 1)[0]
+    return { id: index + 1, value: randomValue }
+  })
+
+  return field
+}
+
+export const clearField = (field: Field) => {
+  return field.map((item) => ({ ...item, value: undefined }))
+}
