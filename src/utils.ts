@@ -1,9 +1,6 @@
 import { GameField, GameFieldItem, SecretField } from "./types"
 
-export const findOrFail = <T extends unknown>(
-  arr: T[],
-  predicate: (item: T) => boolean,
-): T => {
+export const findOrFail = <T>(arr: T[], predicate: (item: T) => boolean): T => {
   const found = arr.find(predicate)
 
   if (!found) throw "not found"
@@ -11,7 +8,7 @@ export const findOrFail = <T extends unknown>(
   return found
 }
 
-export const findIndexOfFail = <T extends unknown>(
+export const findIndexOfFail = <T>(
   arr: T[],
   predicate: (item: T) => boolean,
 ): number => {
@@ -76,13 +73,13 @@ export const randomizeField = (x: number, y: number): SecretField => {
   const total = x * y
   const maxValue = total / 2
 
-  let values: number[] = []
+  const values: number[] = []
   for (let i = 1; i <= maxValue; i++) {
     values.push(i)
     values.push(i)
   }
 
-  let field = Array.from({ length: total }).map((_, index) => {
+  const field = Array.from({ length: total }).map((_, index) => {
     const randomValue = values.splice(randomInteger(0, values.length - 1), 1)[0]
     return { id: index + 1, value: randomValue }
   })
