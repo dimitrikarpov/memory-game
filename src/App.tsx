@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { FieldGrid } from "./FieldGrid"
 import {
   clearField,
@@ -7,15 +7,20 @@ import {
   randomizeField,
 } from "./utils"
 import { flushSync } from "react-dom"
-import { GameField, GameFieldItem } from "./types"
-
-const secretField = randomizeField(4, 4)
-const gameField = clearField(secretField)
+import { GameField, GameFieldItem, SecretField } from "./types"
 
 function App() {
-  const [field, setField] = useState<GameField>(gameField)
+  const [secretField, setSecretField] = useState<SecretField>(() =>
+    randomizeField(4, 4),
+  )
+  const [field, setField] = useState<GameField>(() => clearField(secretField))
   const [prevClickedCard, setPrevClickedCard] = useState<GameFieldItem>()
   const [shouldBlockField, setShouldBlockField] = useState(false)
+  const [isGameOver, setGameOver] = useState(false)
+
+  useEffect(() => {
+    field.every(({ value }) => Boolean(value)) && setGameOver(true)
+  }, [field])
 
   const onCardClick = (item: GameFieldItem) => {
     if (shouldBlockField || item.value) return
@@ -52,13 +57,34 @@ function App() {
     }
   }
 
+  const onShuffleClick = () => {
+    const secretField = randomizeField(4, 4)
+    const gameField = clearField(secretField)
+    setGameOver(false)
+    setSecretField(secretField)
+    setField(gameField)
+  }
+
   return (
-    <div className="flex h-screen w-screen items-center justify-center">
+    <div className="flex h-screen w-screen flex-col items-center justify-center gap-8">
       <FieldGrid
         field={field}
         onCardClick={onCardClick}
         isBlocked={shouldBlockField}
       />
+
+      <div className="h-[52px]">
+        {isGameOver && (
+          <button
+            onClick={onShuffleClick}
+            className="group relative mb-2 mr-2 inline-flex items-center justify-center overflow-hidden rounded-lg bg-gradient-to-br from-purple-600 to-blue-500 p-0.5 text-sm font-medium text-gray-900 hover:text-white focus:outline-none focus:ring-4 focus:ring-blue-300 group-hover:from-purple-600 group-hover:to-blue-500 dark:text-white dark:focus:ring-blue-800"
+          >
+            <span className="relative rounded-md bg-white px-5 py-2.5 transition-all duration-75 ease-in group-hover:bg-opacity-0 dark:bg-gray-900">
+              new game
+            </span>
+          </button>
+        )}
+      </div>
     </div>
   )
 }
