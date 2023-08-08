@@ -1,10 +1,10 @@
 import clsx from "clsx"
-import { Field, FieldItem } from "./App"
+import { GameField, GameFieldItem } from "./types"
 
 type Props = {
-  field: Field
+  field: GameField
   isBlocked: boolean
-  onCardClick: (item: FieldItem) => void
+  onCardClick: (item: GameFieldItem) => void
 }
 
 export const FieldGrid: React.FunctionComponent<Props> = ({
