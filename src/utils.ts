@@ -1,4 +1,4 @@
-import { Field, FieldItem } from "./App"
+import { GameField, GameFieldItem, SecretField } from "./types"
 
 export const findOrFail = <T extends unknown>(
   arr: T[],
@@ -22,23 +22,17 @@ export const findIndexOfFail = <T extends unknown>(
   return index
 }
 
-export const getCardValueById = (field: Field, id: number) => {
-  const found = findOrFail(field, ({ id: itemId }) => itemId === id)
-
-  return found.value
-}
-
 export const openFieldCard = (
-  field: Field,
+  field: GameField,
   id: number,
-  secretField: Field,
-): [Field, number] => {
-  const cardIndex = findIndexOfFail<FieldItem>(
+  secretField: SecretField,
+): [GameField, number] => {
+  const cardIndex = findIndexOfFail<GameFieldItem>(
     field,
     ({ id: cardId }) => cardId === id,
   )
 
-  const openedValue = secretField[cardIndex].value!
+  const openedValue = secretField[cardIndex].value
 
   const newField = [...field]
   newField[cardIndex] = {
@@ -49,8 +43,8 @@ export const openFieldCard = (
   return [newField, openedValue]
 }
 
-export const closeFieldCard = (field: Field, id: number): Field => {
-  const cardIndex = findIndexOfFail<FieldItem>(
+export const closeFieldCard = (field: GameField, id: number): GameField => {
+  const cardIndex = findIndexOfFail<GameFieldItem>(
     field,
     ({ id: cardId }) => cardId === id,
   )
@@ -64,7 +58,7 @@ export const closeFieldCard = (field: Field, id: number): Field => {
   return newField
 }
 
-export const closeFieldCards = (field: Field, ids: number[]): Field => {
+export const closeFieldCards = (field: GameField, ids: number[]): GameField => {
   let newField = [...field]
 
   for (const id of ids) {
@@ -78,7 +72,7 @@ function randomInteger(min: number, max: number) {
   return Math.floor(Math.random() * (max - min + 1)) + min
 }
 
-export const randomizeField = (x: number, y: number): Field => {
+export const randomizeField = (x: number, y: number): SecretField => {
   const total = x * y
   const maxValue = total / 2
 
@@ -96,6 +90,6 @@ export const randomizeField = (x: number, y: number): Field => {
   return field
 }
 
-export const clearField = (field: Field) => {
+export const clearField = (field: GameField) => {
   return field.map((item) => ({ ...item, value: undefined }))
 }

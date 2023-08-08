@@ -7,19 +7,17 @@ import {
   randomizeField,
 } from "./utils"
 import { flushSync } from "react-dom"
-
-export type FieldItem = { id: number; value: number | undefined }
-export type Field = FieldItem[]
+import { GameField, GameFieldItem } from "./types"
 
 const secretField = randomizeField(4, 4)
-const newField = clearField(secretField)
+const gameField = clearField(secretField)
 
 function App() {
-  const [field, setField] = useState<Field>(newField)
-  const [prevClickedCard, setPrevClickedCard] = useState<FieldItem>()
+  const [field, setField] = useState<GameField>(gameField)
+  const [prevClickedCard, setPrevClickedCard] = useState<GameFieldItem>()
   const [shouldBlockField, setShouldBlockField] = useState(false)
 
-  const onCardClick = (item: FieldItem) => {
+  const onCardClick = (item: GameFieldItem) => {
     if (shouldBlockField || item.value) return
 
     const [newField, openedValue] = openFieldCard(field, item.id, secretField)
@@ -50,7 +48,7 @@ function App() {
           setField(newField)
           setShouldBlockField(false)
         })
-      }, 500)
+      }, 350)
     }
   }
 
