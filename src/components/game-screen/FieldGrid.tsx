@@ -1,5 +1,5 @@
 import clsx from "clsx"
-import { GameField, GameFieldItem } from "./types"
+import { GameField, GameFieldItem } from "../../types"
 
 type Props = {
   field: GameField
