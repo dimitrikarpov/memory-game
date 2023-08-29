@@ -2,7 +2,7 @@ import { useState } from "react"
 import { StartScreen } from "./components/start-screen/start-screen"
 import { GameScreen } from "./components/game-screen/game-screen"
 import { Screen } from "./types"
-import { motion, AnimatePresence } from "framer-motion"
+import { AnimatePresence } from "framer-motion"
 
 function App() {
   const [screen, setScreen] = useState<Screen>("start")

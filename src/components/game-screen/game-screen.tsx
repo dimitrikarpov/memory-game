@@ -75,36 +75,27 @@ export const GameScreen: React.FunctionComponent<Props> = ({ onBackClick }) => {
       initial={{ x: 300, opacity: 0 }}
       animate={{ x: 0, opacity: 1 }}
       exit={{ x: -300, opacity: 0 }}
+      className="flex h-screen w-screen flex-col items-center justify-center gap-8"
     >
-      <div className="flex h-screen w-screen flex-col items-center justify-center gap-8">
-        <FieldGrid
-          field={field}
-          onCardClick={onCardClick}
-          isBlocked={shouldBlockField}
-        />
+      <FieldGrid
+        field={field}
+        onCardClick={onCardClick}
+        isBlocked={shouldBlockField}
+      />
 
-        <div className="h-[52px]">
-          <button onClick={onBackClick}>back</button>
+      <div className="h-[52px]">
+        <button onClick={onBackClick}>back</button>
 
-          {isGameOver && (
-            <button
-              onClick={onShuffleClick}
-              className="group relative mb-2 mr-2 inline-flex items-center justify-center overflow-hidden rounded-lg bg-gradient-to-br from-purple-600 to-blue-500 p-0.5 text-sm font-medium text-gray-900 hover:text-white focus:outline-none focus:ring-4 focus:ring-blue-300 group-hover:from-purple-600 group-hover:to-blue-500 dark:text-white dark:focus:ring-blue-800"
-            >
-              <span className="relative rounded-md bg-white px-5 py-2.5 transition-all duration-75 ease-in group-hover:bg-opacity-0 dark:bg-gray-900">
-                new game
-              </span>
-            </button>
-          )}
-        </div>
-
-        {/* <motion.div
-        initial={{ scaleX: 1 }}
-        animate={{ scaleX: 0, transition: { duration: 0.5, ease: "circOut" } }}
-        exit={{ scaleX: 1, transition: { duration: 0.3, ease: "circIn" } }}
-        style={{ originX: isPresent ? 0 : 1 }}
-        className="fixed inset-0 z-10 bg-slate-900"
-      /> */}
+        {isGameOver && (
+          <button
+            onClick={onShuffleClick}
+            className="group relative mb-2 mr-2 inline-flex items-center justify-center overflow-hidden rounded-lg bg-gradient-to-br from-purple-600 to-blue-500 p-0.5 text-sm font-medium text-gray-900 hover:text-white focus:outline-none focus:ring-4 focus:ring-blue-300 group-hover:from-purple-600 group-hover:to-blue-500 dark:text-white dark:focus:ring-blue-800"
+          >
+            <span className="relative rounded-md bg-white px-5 py-2.5 transition-all duration-75 ease-in group-hover:bg-opacity-0 dark:bg-gray-900">
+              new game
+            </span>
+          </button>
+        )}
       </div>
     </motion.div>
   )
