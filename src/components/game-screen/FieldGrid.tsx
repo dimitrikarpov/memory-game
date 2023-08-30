@@ -25,7 +25,7 @@ export const FieldGrid: React.FunctionComponent<Props> = ({
             onCardClick(item)
           }}
           className={clsx(
-            "flex h-[100px] w-[100px] items-center justify-center border border-white ",
+            "flex h-[100px] w-[100px] items-center justify-center border border-white text-5xl",
             !item.value &&
               "bg-slate-500 hover:cursor-pointer hover:bg-slate-700",
           )}

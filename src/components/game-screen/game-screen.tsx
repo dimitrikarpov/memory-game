@@ -9,6 +9,7 @@ import {
   randomizeField,
 } from "../../utils"
 import { FieldGrid } from "./FieldGrid"
+import DialogDemo from "./dialog-demo"
 
 type Props = {
   onBackClick: () => void
@@ -85,6 +86,8 @@ export const GameScreen: React.FunctionComponent<Props> = ({ onBackClick }) => {
 
       <div className="h-[52px]">
         <button onClick={onBackClick}>back</button>
+
+        <DialogDemo />
 
         {isGameOver && (
           <button
