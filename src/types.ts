@@ -3,3 +3,5 @@ export type SecretField = SecretFieldItem[]
 
 export type GameFieldItem = { id: number; value: number | undefined }
 export type GameField = GameFieldItem[]
+
+export type Screen = "start" | "game"
