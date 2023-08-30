@@ -22,13 +22,10 @@ export const GameScreen: React.FunctionComponent<Props> = ({ onBackClick }) => {
   const [field, setField] = useState<GameField>(() => clearField(secretField))
   const [prevClickedCard, setPrevClickedCard] = useState<GameFieldItem>()
   const [shouldBlockField, setShouldBlockField] = useState(false)
-  const [isGameOver, setGameOver] = useState(false)
-
   const [showSuccessDialog, setShowSuccessDialog] = useState(false)
 
   useEffect(() => {
     if (field.every(({ value }) => Boolean(value))) {
-      setGameOver(true)
       openSuccessDialog()
     }
   }, [field])
@@ -68,10 +65,9 @@ export const GameScreen: React.FunctionComponent<Props> = ({ onBackClick }) => {
     }
   }
 
-  const onShuffleClick = () => {
+  const shuffleField = () => {
     const secretField = randomizeField(4, 4)
     const gameField = clearField(secretField)
-    setGameOver(false)
     setSecretField(secretField)
     setField(gameField)
   }
@@ -79,8 +75,6 @@ export const GameScreen: React.FunctionComponent<Props> = ({ onBackClick }) => {
   const openSuccessDialog = () => {
     setShowSuccessDialog(true)
   }
-
-  console.log({ showSuccessDialog })
 
   return (
     <motion.div
@@ -95,25 +89,31 @@ export const GameScreen: React.FunctionComponent<Props> = ({ onBackClick }) => {
         isBlocked={shouldBlockField}
       />
 
-      <div className="h-[52px]">
-        <button onClick={onBackClick}>back</button>
-        <button onClick={openSuccessDialog}>open modal</button>
+      <div className="flex h-[52px] gap-5">
+        <button
+          onClick={onBackClick}
+          className="group relative mb-2 mr-2 inline-flex items-center justify-center overflow-hidden rounded-lg bg-gradient-to-br from-cyan-500 to-blue-500 p-0.5 text-sm font-medium text-gray-900 hover:text-white focus:outline-none focus:ring-4 focus:ring-cyan-200 group-hover:from-cyan-500 group-hover:to-blue-500 dark:text-white dark:focus:ring-cyan-800"
+        >
+          <span className="relative rounded-md bg-white px-5 py-2.5 transition-all duration-75 ease-in group-hover:bg-opacity-0 dark:bg-gray-900">
+            Return to Start Screen
+          </span>
+        </button>
+
+        <button
+          onClick={shuffleField}
+          className="group relative mb-2 mr-2 inline-flex items-center justify-center overflow-hidden rounded-lg bg-gradient-to-br from-purple-500 to-pink-500 p-0.5 text-sm font-medium text-gray-900 hover:text-white focus:outline-none focus:ring-4 focus:ring-purple-200 group-hover:from-purple-500 group-hover:to-pink-500 dark:text-white dark:focus:ring-purple-800"
+        >
+          <span className="relative rounded-md bg-white px-5 py-2.5 transition-all duration-75 ease-in group-hover:bg-opacity-0 dark:bg-gray-900">
+            Reset Field
+          </span>
+        </button>
 
         <SuccessDialog
           open={showSuccessDialog}
           onOpenChange={setShowSuccessDialog}
+          shuffleField={shuffleField}
+          exitToStartScreen={onBackClick}
         />
-
-        {isGameOver && (
-          <button
-            onClick={onShuffleClick}
-            className="group relative mb-2 mr-2 inline-flex items-center justify-center overflow-hidden rounded-lg bg-gradient-to-br from-purple-600 to-blue-500 p-0.5 text-sm font-medium text-gray-900 hover:text-white focus:outline-none focus:ring-4 focus:ring-blue-300 group-hover:from-purple-600 group-hover:to-blue-500 dark:text-white dark:focus:ring-blue-800"
-          >
-            <span className="relative rounded-md bg-white px-5 py-2.5 transition-all duration-75 ease-in group-hover:bg-opacity-0 dark:bg-gray-900">
-              new game
-            </span>
-          </button>
-        )}
       </div>
     </motion.div>
   )
