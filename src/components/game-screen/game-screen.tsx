@@ -9,7 +9,7 @@ import {
   randomizeField,
 } from "../../utils"
 import { FieldGrid } from "./FieldGrid"
-import DialogDemo from "./dialog-demo"
+import { SuccessDialog } from "./success-dialog"
 
 type Props = {
   onBackClick: () => void
@@ -24,8 +24,13 @@ export const GameScreen: React.FunctionComponent<Props> = ({ onBackClick }) => {
   const [shouldBlockField, setShouldBlockField] = useState(false)
   const [isGameOver, setGameOver] = useState(false)
 
+  const [showSuccessDialog, setShowSuccessDialog] = useState(false)
+
   useEffect(() => {
-    field.every(({ value }) => Boolean(value)) && setGameOver(true)
+    if (field.every(({ value }) => Boolean(value))) {
+      setGameOver(true)
+      openSuccessDialog()
+    }
   }, [field])
 
   const onCardClick = (item: GameFieldItem) => {
@@ -71,6 +76,12 @@ export const GameScreen: React.FunctionComponent<Props> = ({ onBackClick }) => {
     setField(gameField)
   }
 
+  const openSuccessDialog = () => {
+    setShowSuccessDialog(true)
+  }
+
+  console.log({ showSuccessDialog })
+
   return (
     <motion.div
       initial={{ x: 300, opacity: 0 }}
@@ -86,8 +97,12 @@ export const GameScreen: React.FunctionComponent<Props> = ({ onBackClick }) => {
 
       <div className="h-[52px]">
         <button onClick={onBackClick}>back</button>
+        <button onClick={openSuccessDialog}>open modal</button>
 
-        <DialogDemo />
+        <SuccessDialog
+          open={showSuccessDialog}
+          onOpenChange={setShowSuccessDialog}
+        />
 
         {isGameOver && (
           <button

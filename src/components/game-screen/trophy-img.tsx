@@ -6,6 +6,7 @@ export const TrophyImg = () => {
       animate={{ y: [5, 0, -5] }}
       transition={{
         duration: 0.75,
+        delay: 0.35,
         repeat: Infinity,
         repeatType: "reverse",
       }}
