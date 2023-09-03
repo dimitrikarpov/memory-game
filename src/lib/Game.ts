@@ -95,8 +95,6 @@ export class Game {
         this.prevClickedCard = undefined
 
         setTimeout(() => {
-          console.log({ prev: this._prevClickedCard, current: item })
-
           this.closeCards([prevCardId, currentCardId])
           this.animationInProgress = false
         })
