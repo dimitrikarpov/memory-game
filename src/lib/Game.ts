@@ -14,9 +14,9 @@ import {
 import { store } from "./store"
 
 export class Game {
-  private _gameField: GameField
+  private _gameField: GameField = []
 
-  private _secretField: SecretField
+  private _secretField: SecretField = []
 
   private _animationInProgress: boolean = false
 
@@ -24,9 +24,8 @@ export class Game {
 
   private _isFieldSolved: boolean = false
 
-  constructor(size: [number, number] = [4, 4]) {
-    this._secretField = randomizeField(size[0], size[1])
-    this._gameField = clearField(this._secretField)
+  constructor() {
+    this.prepareFields()
     this.reset = this.reset.bind(this)
   }
 
@@ -129,9 +128,13 @@ export class Game {
     }
   }
 
-  public reset() {
+  private prepareFields() {
     this._secretField = randomizeField(4, 4)
     this.gameField = clearField(this._secretField)
+  }
+
+  public reset() {
+    this.prepareFields()
     this.prevClickedCard = undefined
     this.animationInProgress = false
     this.isFieldSolved = false

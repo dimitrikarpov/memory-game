@@ -10,24 +10,29 @@ import {
   reset,
 } from "../../lib/game-field-slice"
 import { Game } from "../../lib/Game"
+import { useLayoutEffect, useRef } from "react"
 
 type Props = {
   onBackClick: () => void
 }
 
-const game = new Game([4, 4])
-
 export const GameScreen: React.FunctionComponent<Props> = ({ onBackClick }) => {
+  const gameRef = useRef<Game | null>(null)
   const gameField = useSelector(selectGameField)
   const animationInProgress = useSelector(selectAnimationInProgress)
   const isFieldSolved = useSelector(selectIsFieldSolved)
-
   const dispatch = useDispatch()
+
+  useLayoutEffect(() => {
+    if (gameRef.current) return
+
+    gameRef.current = new Game()
+  }, [])
 
   const onCardClick = (item: GameFieldItem) => {
     if (animationInProgress) return
 
-    game.flipCard(item)
+    gameRef.current?.flipCard(item)
   }
 
   const exitToStartScreen = () => {
@@ -36,7 +41,7 @@ export const GameScreen: React.FunctionComponent<Props> = ({ onBackClick }) => {
   }
 
   const onReset = () => {
-    game.reset()
+    gameRef.current?.reset()
   }
 
   return (
@@ -71,11 +76,13 @@ export const GameScreen: React.FunctionComponent<Props> = ({ onBackClick }) => {
           </span>
         </button>
 
-        <SuccessDialog
-          open={isFieldSolved}
-          shuffleField={game.reset}
-          exitToStartScreen={exitToStartScreen}
-        />
+        {gameRef.current && (
+          <SuccessDialog
+            open={isFieldSolved}
+            shuffleField={gameRef.current.reset}
+            exitToStartScreen={exitToStartScreen}
+          />
+        )}
       </div>
     </motion.div>
   )
