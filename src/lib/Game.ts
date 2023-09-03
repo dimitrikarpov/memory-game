@@ -27,8 +27,7 @@ export class Game {
   constructor(size: [number, number] = [4, 4]) {
     this._secretField = randomizeField(size[0], size[1])
     this._gameField = clearField(this._secretField)
-
-    console.log({ sf: this._secretField })
+    this.reset = this.reset.bind(this)
   }
 
   get gameField() {
@@ -131,8 +130,6 @@ export class Game {
   }
 
   public reset() {
-    console.log({ thiss: this })
-
     this._secretField = randomizeField(4, 4)
     this.gameField = clearField(this._secretField)
     this.prevClickedCard = undefined
