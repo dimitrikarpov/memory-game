@@ -10,70 +10,61 @@ import {
 } from "../../utils"
 import { FieldGrid } from "./FieldGrid"
 import { SuccessDialog } from "./success-dialog"
+import { useSelector, useDispatch } from "react-redux"
+import {
+  selectSecretField,
+  selectGameField,
+  selectAnimationInProgress,
+  selectIsFieldSolved,
+  selectPrevClickedCard,
+  reset,
+} from "../../lib/game-field-slice"
+import { Game } from "../../lib/Game"
 
 type Props = {
   onBackClick: () => void
 }
 
-export const GameScreen: React.FunctionComponent<Props> = ({ onBackClick }) => {
-  const [secretField, setSecretField] = useState<SecretField>(() =>
-    randomizeField(4, 4),
-  )
-  const [field, setField] = useState<GameField>(() => clearField(secretField))
-  const [prevClickedCard, setPrevClickedCard] = useState<GameFieldItem>()
-  const [shouldBlockField, setShouldBlockField] = useState(false)
-  const [showSuccessDialog, setShowSuccessDialog] = useState(false)
+const game = new Game([4, 4])
 
-  useEffect(() => {
-    if (field.every(({ value }) => Boolean(value))) {
-      openSuccessDialog()
-    }
-  }, [field])
+export const GameScreen: React.FunctionComponent<Props> = ({ onBackClick }) => {
+  const gameField = useSelector(selectGameField)
+  const animationInProgress = useSelector(selectAnimationInProgress)
+  const isFieldSolved = useSelector(selectIsFieldSolved)
+
+  const dispatch = useDispatch()
+
+  // useEffect(() => {
+  //   if (gameField.every(({ value }) => Boolean(value))) {
+  //     openSuccessDialog()
+  //   }
+  // }, [gameField])
 
   const onCardClick = (item: GameFieldItem) => {
-    if (shouldBlockField || item.value) return
+    if (animationInProgress) return
 
-    const [newField, openedValue] = openFieldCard(field, item.id, secretField)
-
-    setField(newField)
-
-    if (!prevClickedCard) {
-      setPrevClickedCard({ ...item, value: openedValue })
-
-      return
-    }
-
-    if (prevClickedCard.value === openedValue) {
-      setPrevClickedCard(undefined)
-
-      return
-    }
-
-    if (prevClickedCard.value !== openedValue) {
-      setShouldBlockField(true)
-
-      setTimeout(() => {
-        setPrevClickedCard(undefined)
-
-        flushSync(() => {
-          const newField = closeFieldCards(field, [prevClickedCard.id, item.id])
-
-          setField(newField)
-          setShouldBlockField(false)
-        })
-      }, 350)
-    }
+    game.flipCard(item)
   }
 
   const shuffleField = () => {
-    const secretField = randomizeField(4, 4)
-    const gameField = clearField(secretField)
-    setSecretField(secretField)
-    setField(gameField)
+    // const secretField = randomizeField(4, 4)
+    // const gameField = clearField(secretField)
+    // setSecretField(secretField)
+    // setField(gameField)
   }
 
-  const openSuccessDialog = () => {
-    setShowSuccessDialog(true)
+  // const openSuccessDialog = () => {
+  //   // setShowSuccessDialog(true)
+  // }
+
+  const exitToStartScreen = () => {
+    // dispatch(reset())
+    game.reset()
+    // onBackClick()
+  }
+
+  const onReset = () => {
+    game.reset()
   }
 
   return (
@@ -84,9 +75,9 @@ export const GameScreen: React.FunctionComponent<Props> = ({ onBackClick }) => {
       className="flex h-screen w-screen flex-col items-center justify-center gap-8"
     >
       <FieldGrid
-        field={field}
+        field={gameField}
         onCardClick={onCardClick}
-        isBlocked={shouldBlockField}
+        isBlocked={animationInProgress}
       />
 
       <div className="flex h-[52px] gap-5">
@@ -100,7 +91,7 @@ export const GameScreen: React.FunctionComponent<Props> = ({ onBackClick }) => {
         </button>
 
         <button
-          onClick={shuffleField}
+          onClick={onReset}
           className="group relative mb-2 mr-2 inline-flex items-center justify-center overflow-hidden rounded-lg bg-gradient-to-br from-purple-500 to-pink-500 p-0.5 text-sm font-medium text-gray-900 hover:text-white focus:outline-none focus:ring-4 focus:ring-purple-200 group-hover:from-purple-500 group-hover:to-pink-500 dark:text-white dark:focus:ring-purple-800"
         >
           <span className="relative rounded-md bg-white px-5 py-2.5 transition-all duration-75 ease-in group-hover:bg-opacity-0 dark:bg-gray-900">
@@ -109,10 +100,11 @@ export const GameScreen: React.FunctionComponent<Props> = ({ onBackClick }) => {
         </button>
 
         <SuccessDialog
-          open={showSuccessDialog}
-          onOpenChange={setShowSuccessDialog}
-          shuffleField={shuffleField}
-          exitToStartScreen={onBackClick}
+          open={isFieldSolved}
+          // open={showSuccessDialog}
+          // onOpenChange={setShowSuccessDialog}
+          shuffleField={game.reset}
+          exitToStartScreen={exitToStartScreen}
         />
       </div>
     </motion.div>

@@ -55,11 +55,14 @@ export const closeFieldCard = (field: GameField, id: number): GameField => {
   return newField
 }
 
-export const closeFieldCards = (field: GameField, ids: number[]): GameField => {
+export const closeFieldCards = (
+  field: GameField,
+  ids: (number | undefined)[],
+): GameField => {
   let newField = [...field]
 
   for (const id of ids) {
-    newField = closeFieldCard(newField, id)
+    newField = closeFieldCard(newField, id!)
   }
 
   return newField
